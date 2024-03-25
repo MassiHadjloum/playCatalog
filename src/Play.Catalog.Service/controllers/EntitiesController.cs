@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Play.Catalog.Service.Dtos;
+using Play.Catalog.Service.Model;
 using Play.Catalog.Service.Repositories;
 
 namespace Play.Catalog.Service.Controllers
@@ -38,6 +39,12 @@ namespace Play.Catalog.Service.Controllers
     public async Task<ActionResult<ItemDto>> AddItemAsync(CreateItemDto createItemDto)
     {
       var item = Extensions.AsItem(createItemDto);
+      var itemm = new Item {
+        Name = createItemDto.Name,
+        Description = createItemDto.Description,
+        Price = createItemDto.Price,
+        CreatedDate = DateTimeOffset.UtcNow
+      };
       await itemsRepository.CreateAsync(item);
       // at runtime GetByIdAsync Async suffix will be removed
       // options.SuppressAsyncSuffixInActionNames = false; on builder.Services.AddControllers
@@ -48,11 +55,15 @@ namespace Play.Catalog.Service.Controllers
     [HttpPut("{id}")]
     public async Task<ActionResult> UpdateItemAsync(Guid id, UpdateItemDto updateItemDto)
     {
-      var exestingItem = itemsRepository.GetAsync(id);
+      var exestingItem = await itemsRepository.GetAsync(id);
       if(exestingItem == null) {
         return NotFound();
       }
-      await itemsRepository.UpdateAsync(Extensions.AsItem(updateItemDto));
+      exestingItem.Name = updateItemDto.Name;
+      exestingItem.Description = updateItemDto.Description;
+      exestingItem.Price = updateItemDto.Price;
+      // await itemsRepository.UpdateAsync(Extensions.AsItem(updateItemDto));
+      await itemsRepository.UpdateAsync(exestingItem);
 
       return NoContent();
     }
