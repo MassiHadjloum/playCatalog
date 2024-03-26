@@ -12,9 +12,9 @@ namespace Play.Catalog.Service.Controllers
   public class EntitiesController : ControllerBase
   {
 
-    private readonly IItemsRepository itemsRepository;
+    private readonly IRepository<Item> itemsRepository;
 
-    public EntitiesController(IItemsRepository itemsRepository) {
+    public EntitiesController(IRepository<Item> itemsRepository) {
       this.itemsRepository = itemsRepository;
     }    
 
