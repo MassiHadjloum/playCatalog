@@ -1,16 +1,31 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Play.Catalog.Service.Dtos {
-
-public interface IItemDto
+namespace Play.Catalog.Service.Dtos
 {
-    string Name { get; }
-    string Description { get; }
-    decimal Price { get; }
+    public interface IItemDto
+    {
+        string Name { get; }
+        string Description { get; }
+        decimal Price { get; }
+    }
+
+    public record ItemDto(
+        Guid Id,
+        string Name,
+        string Description,
+        decimal Price,
+        DateTimeOffset CreatedDate
+    );
+
+    public record CreateItemDto(
+        [Required] string Name,
+        string Description,
+        [Range(0, 1000)] decimal Price
+    ) : IItemDto;
+
+    public record UpdateItemDto(
+        [Required] string Name,
+        string Description,
+        [Range(0, 1000)] decimal Price
+    ) : IItemDto;
 }
-  public record ItemDto(Guid Id, string Name, string Description, decimal Price, DateTimeOffset CreatedDate);
-
-    public record CreateItemDto([Required] string Name, string Description, [Range(0, 1000)] decimal Price) : IItemDto;
-
-    public record UpdateItemDto([Required] string Name, string Description, [Range(0, 1000)] decimal Price) : IItemDto;
-} 
